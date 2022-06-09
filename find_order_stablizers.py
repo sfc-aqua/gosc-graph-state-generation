@@ -1,4 +1,4 @@
-#source code of heap
+#modified based on the source code of heapq
 def heappush(heap, item,stablizer_order,stablizer):
     """Push item onto heap, maintaining the heap invariant."""
     heap.append(item)

@@ -75,7 +75,7 @@ def schedule_stablizers(operations):
 
     for i in range(1,n):
         if min(sorted_start[i])>heap[0]:
-            print('bingo!!!!!')
+            #print('bingo!!!!!')
             order.heappop(heap,operation_steps)
             sorted_stablizers[i]=[sorted_stablizers[0],sorted_stablizers[i]]
             order.heappush(heap, max(sorted_start[i]), operation_steps, sorted_stablizers[i])
