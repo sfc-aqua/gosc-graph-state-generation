@@ -4,8 +4,6 @@ import numpy
 import heapq
 
 time_stamp=0 #for gosc rules time step, not used for now
-patch_index={}
-pairs_id_index={}
 #the value for board, row and col here is just for understanding
 num_row=6
 num_col=6
@@ -56,25 +54,28 @@ def create_qubits_index(col,board,row=0):
 def schedule_stablizers(operations):
     #shedule the order of applying the stablizers using minHeap
     heap=[]
-    operation_steps={}
+    operation_steps=[]
     n = len(operations)
     step=0
 
     sorted_start=sorted(operations, key=lambda x: min(x))
     sorted_stablizers=create_stablizer(sorted_start)
     heapq.heappush(heap,max(sorted_start[0]))
-    operation_steps[0]=[sorted_stablizers[0]]
+    operation_steps.append([sorted_stablizers[0]])
 
     for i in range(1,n):
         if min(sorted_start[i])>heap[0]:
             heapq.heappop(heap)
             operation_steps[0].append(sorted_stablizers[i])
+            operation_steps.append(operation_steps.pop(0))
         else:
             step+=1
-            operation_steps[step] = [sorted_stablizers[i]]
+            operation_steps.append([sorted_stablizers[i]])
         heapq.heappush(heap,max(sorted_start[i]))
     return heap,operation_steps
 
+patch_index={}
+pairs_id_index={}
 def map_to_device(qubits_num,qubits_index):
     # Use the simplest method: qubit 1 map to index 1 on board. mapping method tbd
     num_patch = 0
@@ -89,6 +90,7 @@ def map_to_device(qubits_num,qubits_index):
 board=create_board(num_row,num_col)
 num_nodes,node_adj=read_adjacency(adj_list)
 num_step, operation_steps=schedule_stablizers(node_adj)
+#map_to_device(num_nodes,)
 
 #print out the results
 print("number of step to implement stablizer: "+str(len(num_step)))
