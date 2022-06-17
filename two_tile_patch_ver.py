@@ -8,8 +8,8 @@ from create_random_graph import gen_erdos_renyi_graph_single_component
 import find_order_stablizers as order
 import warnings
 import matplotlib.cbook
+import copy
 warnings.filterwarnings("ignore",category=matplotlib.cbook.mplDeprecation)
-
 """
 adj_list={
     "0":["1"],
@@ -89,7 +89,7 @@ def schedule_stablizers(operations):
             order.heappush(heap,max(sorted_start[i]),operation_steps,[sorted_stablizers[i]])
     return heap,operation_steps
 
-def map_to_device(qubits_num,qubits_index):
+def map_to_device(board,qubits_num,qubits_index):
     # Use the simplest method: qubit 1 map to index 1 on board. mapping method tbd
     num_patch = 0
     pairs_id_index = {}
@@ -118,26 +118,40 @@ def stablizer_to_device(operation_steps,pairs_id_index):
                         stablizer_on_device[i][pairs_id_index[k]].append(operation_steps[i][j][k])
     return stablizer_on_device
 
+def create_ancilla(board,stablizers_on_qubits):
+    board_step={}
+    for i,j in stablizers_on_qubits.items():
+        board_step[i]=copy.deepcopy(board)
+        for qubit in j.keys():
+            #print(board_step[i][1])
+            board_step[i][1][2*qubit:2 * qubit+2]='anc'
+    return board_step
+
 
 #run the compilation
-n_nodes_ran=random.randint(3, 9)
-n_edges_ran=random.randint(n_nodes_ran, n_nodes_ran+3)
-G,adj_list_gen=gen_erdos_renyi_graph_single_component(n_nodes_ran,n_edges_ran)
-#the value for board, row and col here is just for understanding
-num_row=3
-num_col=2*n_nodes_ran
-board=create_board(num_row,num_col)
-num_nodes,node_adj=read_adjacency(adj_list_gen)
-patch_index=create_qubits_index(num_col)
-pairs_id_index, board, num_patch=map_to_device(num_nodes,patch_index)
-num_step, operation_steps=schedule_stablizers(node_adj)
-stablizer_on_qubits=stablizer_to_device(operation_steps,pairs_id_index)
+def main():
+    n_nodes_ran=random.randint(3, 9)
+    n_edges_ran=random.randint(n_nodes_ran, n_nodes_ran+3)
+    G,adj_list_gen=gen_erdos_renyi_graph_single_component(n_nodes_ran,n_edges_ran)
+    #the value for board, row and col here is just for understanding
+    num_row=3
+    num_col=2*n_nodes_ran
+    board=create_board(num_row,num_col)
+    num_nodes,node_adj=read_adjacency(adj_list_gen)
+    patch_index=create_qubits_index(num_col)
+    pairs_id_index, board, num_patch=map_to_device(board,num_nodes,patch_index)
+    num_step, operation_steps=schedule_stablizers(node_adj)
+    stablizer_on_qubits=stablizer_to_device(operation_steps,pairs_id_index)
+    board_step=create_ancilla(board,stablizer_on_qubits)
+    return  len(num_step),num_nodes,adj_list_gen,stablizer_on_qubits,board_step
 
-
-#print out the results
-print("adjacency list:"+str(adj_list_gen))
-print("number of step to implement stablizer: "+str(len(num_step)))
-print("order of implementing stablizers: "+str(operation_steps))
-print("measurement on qubits to apply: "+str(stablizer_on_qubits))
-#print("number of patch:"+str(num_patch))
-print("qubit allocation on device:\n"+str(board))
+if __name__ == '__main__':
+    num_step,num_nodes, adj_list_gen,stablizer_on_qubits,board_step =main()
+    #print out the results
+    print("adjacency list:"+str(adj_list_gen))
+    print("number of step to implement stablizer: "+str(num_step))
+    #print("order of implementing stablizers: "+str(operation_steps))
+    print("measurement on qubits to apply: "+str(stablizer_on_qubits))
+    #print("number of patch:"+str(num_patch))
+    #print("qubit allocation on device:\n"+str(board))
+    print(board_step)
