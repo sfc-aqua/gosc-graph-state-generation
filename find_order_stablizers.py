@@ -32,9 +32,11 @@ def heappop(heap,stablizer_order):
         returnsta = stablizer_order[0]
         heap[0] = lastelt
         stablizer_order[0] = laststa
-        _siftup(heap, 0,stablizer_order)
-        return returnitem,returnsta
-    return lastelt,laststa
+        _siftup(heap, 0, stablizer_order)
+    else:
+        returnitem = lastelt
+        returnsta = laststa
+    return returnitem,returnsta
 
 def _siftup(heap, pos,stablizer_order):
     endpos = len(heap)
