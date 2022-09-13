@@ -3,7 +3,7 @@ from matplotlib.patches import Rectangle
 import random
 import math
 from create_random_graph import gen_erdos_renyi_graph_single_component
-import two_tile_patch_ver as twotile
+from old_version import two_tile_patch_ver as twotile
 import numbers
 
 

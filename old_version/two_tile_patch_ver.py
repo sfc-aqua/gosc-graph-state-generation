@@ -12,8 +12,11 @@ import copy
 import math
 import networkx as nx
 import networkx.algorithms.approximation as nxaa
+import min_cut
+
 
 warnings.filterwarnings("ignore",category=matplotlib.cbook.mplDeprecation)
+
 
 """
 adj_list={
@@ -111,6 +114,22 @@ def map_to_device(board,qubits_num,qubits_index):
         num_patch += 1
     return pairs_id_index, board, num_patch
 
+def map_to_device_min(adjacency_list,layout):
+    if len(adjacency_list)>2:
+        cut=min_cut.main(adjacency_list)
+        cut_list=adjacency_list.copy() #tbd
+        for i in cut:
+            cut_list[i[0]].remove(i[1])
+            cut_list[i[1]].remove(i[0])
+        G = nx.Graph(cut_list)
+        adjacency_list = [nx.to_dict_of_lists(G.subgraph(c).copy()) for c in nx.connected_components(G)]
+        return map_to_device_min(adjacency_list,layout)
+    else:
+        print(adjacency_list)
+        layout.append(list(adjacency_list.keys()))
+        print(layout)
+        return map_to_device_min(adjacency_list,layout)
+
 def stablizer_to_device(operation_steps,pairs_id_index):
     #which stablizer to which qubit on devices, in scheduled order
     #too cumbersome
@@ -160,11 +179,11 @@ def main(adj_list,n_nodes,graph):
     print("Before set to plus state: "+ str(len(operation_steps)))
     print(operation_steps)
     #step to decide nodes which set to plus state
-    #max_independent=nxaa.maximum_independent_set(graph) #return the an approximate maximum independent set
-    #print("Maximum independent nodes: "+str(max_independent))
-    #reduce_num,reduce_sta=reduce_stablizers_by_plus(operation_steps,max_independent,pairs_id_index)
-    #print("After set to plus state: "+str(reduce_num))
-    #print(reduce_sta)
+    max_independent=nxaa.maximum_independent_set(graph) #return the an approximate maximum independent set
+    print("Maximum independent nodes: "+str(max_independent))
+    reduce_num,reduce_sta=reduce_stablizers_by_plus(operation_steps,max_independent,pairs_id_index)
+    print("After set to plus state: "+str(reduce_num))
+    print(reduce_sta)
 
 
     stablizer_on_qubits=stablizer_to_device(operation_steps,pairs_id_index)
@@ -172,15 +191,28 @@ def main(adj_list,n_nodes,graph):
     return  len(num_step),num_nodes,adj_list,stablizer_on_qubits,board_step
 
 if __name__ == '__main__':
-    n_nodes_ran = random.randint(4, 8)
-    n_edges_ran = random.randint(n_nodes_ran+1, math.floor((n_nodes_ran * (n_nodes_ran - 1)) / 2 / 1.5))
+    graph = {1: [2, 3],
+             2: [1, 3,4,5],
+             3: [1, 2,5],
+             4: [ 2, 5],
+             5: [2,3,4],
 
-    adj_list_gen, graph = gen_erdos_renyi_graph_single_component(n_nodes_ran, n_edges_ran) #generate random graph for testing
+             }
+    layout = []
+    G = nx.Graph(graph)
+    S = [nx.to_dict_of_lists(G.subgraph(c).copy()) for c in nx.connected_components(G)]
+    for i in S:
+        map_to_device_min(i,layout)
 
-    if adj_list_gen!=None:
+    #n_nodes_ran = random.randint(4, 8)
+    #n_edges_ran = random.randint(n_nodes_ran+1, math.floor((n_nodes_ran * (n_nodes_ran - 1)) / 2 / 1.5))
+
+    #adj_list_gen, graph = gen_erdos_renyi_graph_single_component(n_nodes_ran, n_edges_ran) #generate random graph for testing
+
+    #if adj_list_gen!=None:
 
         #run compilation
-        num_step_scheduled,num_stablizers, adj_list_gen,stablizer_on_qubits, board_step=main(adj_list_gen,n_nodes_ran,graph )
+        #num_step_scheduled,num_stablizers, adj_list_gen,stablizer_on_qubits, board_step=main(adj_list_gen,n_nodes_ran,graph )
 
         #num_step,num_nodes, adj_list_gen,stablizer_on_qubits,board_step =main()
         #print out the results

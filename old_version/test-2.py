@@ -1,4 +1,4 @@
-import two_tile_patch_ver as twotile
+import two_tile_patch_refactor as TwoTileVer
 import time
 import random
 import math
@@ -16,14 +16,18 @@ for i in range(1000):
     #generate sparse graph
     #n_edges_ran = random.randint(n_nodes_ran+10, math.floor((n_nodes_ran * (n_nodes_ran - 1))/ 2 / 2))
 
-    #generate dense graph
+    #generate dense graph　
     n_edges_ran = random.randint(math.floor((n_nodes_ran * (n_nodes_ran - 1))/ 2 / 2),(n_nodes_ran * (n_nodes_ran - 1))/ 2)
 
-    adj_list_gen = gen_erdos_renyi_graph_single_component(n_nodes_ran, n_edges_ran)  #generate random graph for testing
+    adj_list_gen, graph = gen_erdos_renyi_graph_single_component(n_nodes_ran, n_edges_ran)  #generate random graph for testing
 
     if adj_list_gen!=None:
         time_start = time.time()
         #run compilation
+
+        Job = TwoTileVer(ad_list=graph, graph=G)
+        Job.run()
+
         num_step_scheduled,num_stablizers, adj_list_gen,stablizer_on_qubits,board_step=twotile.main(adj_list_gen,n_nodes_ran )
 
         total_stablizers += num_stablizers
