@@ -9,6 +9,7 @@ import networkx as nx
 import networkx.algorithms.approximation as nxaa
 import min_cut
 
+
 warnings.filterwarnings("ignore",category=matplotlib.cbook.mplDeprecation)
 
 
@@ -77,7 +78,7 @@ class TwoTileVer():
         self.mapping=[]
 
     def read_adjacency(self):
-        # Read adjacency list in dictionary form as input
+        # Read adjacency list in dictionary form as input, save as list form as output
         self.stablizers_pair = []
         self.num_node = len(self.ad_list.keys())
         sorted_adj = sorted(self.ad_list.items())
@@ -87,28 +88,28 @@ class TwoTileVer():
                 temp.append(int(adj_node))
             self.stablizers_pair.append(temp)
 
-    def create_stablizer(self):
-        #create stablizers from adjacency of node [[node,adjacent nodes]...]
-        self.stablizer_list=[]
-        for stablizer in range(len(self.stablizers_pair_reduced)):
-            temp = ['I'] * len(self.stablizers_pair)
-            temp[self.stablizers_pair_reduced[stablizer][0]]='X'
-            for adj in range(1,len(self.stablizers_pair_reduced[stablizer])):
-                temp[self.stablizers_pair_reduced[stablizer][adj]]='Z'
-            self.stablizer_list.append(temp)
-
     def create_board(self,r,c):
         #create logical qubits board of certain size r*c
         self.board=numpy.empty((r, c),dtype=object) #default as none
 
     def create_patch_index(self, col,row=0):
-        #the logical qubit index on the board, for one line 2-tile-patches
+        #the index of the logical qubit on the board, for 2-tile-patches in the first row
         self.patch_index = {}
         num_index=col//2
         col_position = 0
         for i in range(num_index):
             self.patch_index[i]=[[row,col_position],[row,col_position+1]]
             col_position += 2
+
+    def create_stablizer(self):
+        #create stablizers from adjacency list of node [[node,adjacent nodes]...]
+        self.stablizer_list=[]
+        for stablizer in range(len(self.stablizers_pair_reduced)):
+            temp = ['I'] * self.num_node
+            temp[self.stablizers_pair_reduced[stablizer][0]]='X'
+            for adj in range(1,len(self.stablizers_pair_reduced[stablizer])):
+                temp[self.stablizers_pair_reduced[stablizer][adj]]='Z'
+            self.stablizer_list.append(temp)
 
     def schedule_stablizers(self):
         #shedule the order of applying the stablizers using minHeap
@@ -131,7 +132,6 @@ class TwoTileVer():
             else:
                 order.heappush(heap,max(self.stablizers_pair_reduced[stablizer]),self.operation_steps,[self.stablizer_list[stablizer]])
 
-
     def reduce_stablizers_by_plus(self, max_indepen_nodes):
         self.operation_steps_reduced=copy.deepcopy(self.operation_steps)
         for node in max_indepen_nodes:
@@ -145,19 +145,20 @@ class TwoTileVer():
         reduced_num=len(self.operation_steps)-len(self.operation_steps_reduced)
         return reduced_num
 
-    def reduce_stablizers_by_plus_mo(self, max_indepen_nodes):
+    def reduce_stablizers_plus(self, max_indepen_nodes):
         self.stablizers_pair_reduced=copy.deepcopy(self.stablizers_pair)
         for node in max_indepen_nodes:
             for stablizer in self.stablizers_pair:
                 if stablizer[0]==node:
                     self.stablizers_pair_reduced.remove(stablizer)
+                #tbd
                 if stablizer==[]:
                     self.stablizers_pair_reduced.remove([])
         reduced_num=len(self.stablizers_pair)-len(self.stablizers_pair_reduced)
         return reduced_num
 
     def map_to_device(self):
-        # Use the simplest method: qubit 1 map to index 1 on board. mapping method tbd
+        # trivial method: virtual qubit 1 map to logical qubit index 1 on board, etc.
         self.pairs_id_index = {}
         for i in range(self.num_node):
             self.pairs_id_index[i] = i
@@ -216,15 +217,19 @@ class TwoTileVer():
 
     #run the compilation
     def run(self):
+        """
+        import cProfile
+        import re
+        cProfile.run('re.compile("foo|bar")')
+        """
         self.read_adjacency()
-        num_row=3
+        num_row=2
         num_col=2*self.num_node
         self.create_board(num_row,num_col)
         self.create_patch_index(num_col)
         self.map_to_device_min()
-        #self.schedule_stablizers()
         max_independent=nxaa.maximum_independent_set(self.graph) #return the an approximate maximum independent set
-        reduce_num=self.reduce_stablizers_by_plus_mo(max_independent)
+        reduce_num=self.reduce_stablizers_plus(max_independent)
         self.schedule_stablizers()
         self.stablizer_to_device()
         self.create_ancilla()
