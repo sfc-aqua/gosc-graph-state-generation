@@ -1,7 +1,8 @@
-from two_tile_patch_refactor import TwoTileVer
+from two_tile_patch import TwoTileVer
 import time
 import random
 import math
+import re
 from create_random_graph import gen_erdos_renyi_graph_single_component
 
 time_compilation=0 #compilation timer
@@ -10,19 +11,20 @@ num_op=0
 total_stablizers=0 #total steps of applying stablizers without optimization
 total_optimzed_stablizers=0 #total steps of applying stablizers with optimization
 
-for i in range(10):
-    n_nodes_ran = random.randint(10, 12)
+for i in range(1):
+    n_nodes_ran = random.randint(5, 8)
 
     #generate sparse graph
-    #n_edges_ran = random.randint(n_nodes_ran+3, math.floor((n_nodes_ran * (n_nodes_ran - 1))/ 2 / 2))
+    n_edges_ran = random.randint(n_nodes_ran+3, math.floor((n_nodes_ran * (n_nodes_ran - 1))/ 2 / 2))
 
     #generate dense graph　
-    n_edges_ran = random.randint(math.floor((n_nodes_ran * (n_nodes_ran - 1))/ 2 / 2),(n_nodes_ran * (n_nodes_ran - 1))/ 2)
+    #n_edges_ran = random.randint(math.floor((n_nodes_ran * (n_nodes_ran - 1))/ 2 / 2),(n_nodes_ran * (n_nodes_ran - 1))/ 2)
 
     adj_list_gen, graph = gen_erdos_renyi_graph_single_component(n_nodes_ran, n_edges_ran)  #generate random graph for testing
 
     time_start = time.time()
     if adj_list_gen!=None:
+
         #run compilation
 
         Job = TwoTileVer(ad_list=adj_list_gen, graph=graph)
