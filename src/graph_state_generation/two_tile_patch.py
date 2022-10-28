@@ -1,14 +1,15 @@
 """The two-tile patch version for building arbitrary logical graph states based on a game of surface code"""
 
-import numpy
-import find_order_stablizers as order
-import warnings
-import matplotlib.cbook
 import copy
+import warnings
+
+import matplotlib.cbook
 import networkx as nx
 import networkx.algorithms.approximation as nxaa
-import min_cut
+import numpy
 
+import graph_state_generation.find_order_stablizers as order
+import graph_state_generation.min_cut as min_cut
 
 warnings.filterwarnings("ignore",category=matplotlib.cbook.mplDeprecation)
 

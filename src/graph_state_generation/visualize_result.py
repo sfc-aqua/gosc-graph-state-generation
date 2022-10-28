@@ -1,11 +1,14 @@
+import math
+import numbers
+import random
+
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
-import random
-import math
-from create_random_graph import gen_erdos_renyi_graph_single_component
-from old_version import two_tile_patch_ver as twotile
-import numbers
+from tests.graph_state_generation.create_random_graph import (
+    gen_erdos_renyi_graph_single_component,
+)
 
+from old_version import two_tile_patch_ver as twotile
 
 n_nodes_ran = random.randint(3, 5)
 
@@ -23,7 +26,7 @@ if adj_list_gen != None:
     print(num_stablizers)
 
 def saveImage(p,step):
-    filename = './img/' + str(step) + '.png'
+    filename = '../code_visualization/' + str(step) + '.png'
     p.savefig(filename)
 
 for step in range(0,num_step_scheduled):
