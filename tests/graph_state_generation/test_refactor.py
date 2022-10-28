@@ -3,9 +3,10 @@ import random
 import re
 import time
 
+from graph_state_generation.testing_tools.create_random_graph import (
+    gen_erdos_renyi_graph_single_component,
+)
 from graph_state_generation.two_tile_patch import TwoTileVer
-
-from .create_random_graph import gen_erdos_renyi_graph_single_component
 
 time_compilation=0 #compilation timer
 result=[]
