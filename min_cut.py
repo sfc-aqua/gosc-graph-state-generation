@@ -57,8 +57,8 @@ def main(adjacency_list):
         for j in shortestV[keys[1]]:
             if j in adjacency_list[i]:
                 cut_edge.append([i,j])
-    #print("the shortest length of cut is {}".format(shortestLen))
-    #print("the cut edge is {}".format(cut_edge))
+    print("the shortest length of cut is {}".format(shortestLen))
+    print("the cut edge is {}".format(cut_edge))
     return cut_edge
 
 main(graph)

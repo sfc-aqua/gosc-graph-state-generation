@@ -4,6 +4,12 @@ import random
 import math
 import re
 from create_random_graph import gen_erdos_renyi_graph_single_component
+import cProfile
+import cProfile, pstats, io
+from pstats import SortKey
+
+pr = cProfile.Profile()
+pr.enable()
 
 time_compilation=0 #compilation timer
 result=[]
@@ -12,7 +18,7 @@ total_stablizers=0 #total steps of applying stablizers without optimization
 total_optimzed_stablizers=0 #total steps of applying stablizers with optimization
 
 for i in range(1):
-    n_nodes_ran = random.randint(5, 8)
+    n_nodes_ran = random.randint(120, 150)
 
     #generate sparse graph
     n_edges_ran = random.randint(n_nodes_ran+3, math.floor((n_nodes_ran * (n_nodes_ran - 1))/ 2 / 2))
@@ -29,6 +35,7 @@ for i in range(1):
 
         Job = TwoTileVer(ad_list=adj_list_gen, graph=graph)
         Job.run()
+
         print("After scheduling: " + str(len(Job.operation_steps)) + " Before scheduling: " + str(Job.num_node))
         #print("Adjacent list: "+str(len(Job.ad_list)))
         #print("Mapping"+str(Job.pairs_id_index))
@@ -39,3 +46,9 @@ for i in range(1):
     time_compilation += time_end-time_start
 
 print(time_compilation)
+pr.disable()
+s = io.StringIO()
+sortby = SortKey.CUMULATIVE
+ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+ps.print_stats()
+print(s.getvalue())

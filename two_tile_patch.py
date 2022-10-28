@@ -217,11 +217,13 @@ class TwoTileVer():
 
     #run the compilation
     def run(self):
+
         """
         import cProfile
         import re
         cProfile.run('re.compile("foo|bar")')
         """
+
         self.read_adjacency()
         num_row=2
         num_col=2*self.num_node
