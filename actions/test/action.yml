@@ -21,6 +21,6 @@ runs:
       env:
         SSH_AUTH_SOCK: /tmp/ssh_agent.sock
 
-    - name: Run test coverage
+    - name: Run tests
       shell: bash
-      run: make coverage
+      run: make test

@@ -35,6 +35,4 @@ jobs:
       # in repo settings.
       # ------------------------------------------------------------------------
 
-      - uses: ./actions/coverage
-        with:
-          codecov_secret: ${{ secrets.CODECOV_TOKEN }}
+      - uses: ./actions/test

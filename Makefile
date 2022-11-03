@@ -80,15 +80,6 @@ isort-default: clean
 test-default:
 	$(PYTHON) -m pytest tests
 
-coverage-default:
-	$(PYTHON) -m pytest \
-		--cov=src \
-		--cov-fail-under=$(MIN_COVERAGE) tests \
-		--no-cov-on-fail \
-		--cov-report xml \
-		&& echo Code coverage Passed the $(MIN_COVERAGE)% mark!
-
-
 style-default: flake8p mypy black isort
 	@echo This project passes style!
 
