@@ -5,6 +5,7 @@ from typing import List, Set, Tuple
 def greedy_stabilizer_measurement_scheduler(
     stabilizer_to_measure: List[Tuple[int, Tuple[int, int]]]
 ) -> List[List[Tuple[int, Tuple[int, int]]]]:
+    """Optimal stabilizer measurement scheduler given that labelling is fixed. Proof to be written."""
 
     # stabilizer_to_measure is [(S_i, (min_i, max_i))]
     stabilizer_to_measure = stabilizer_to_measure
