@@ -1,5 +1,5 @@
 from collections import deque
-from typing import List, Set, Tuple
+from typing import List, Tuple
 
 
 def greedy_stabilizer_measurement_scheduler(

@@ -15,9 +15,7 @@ def default_pre_mapping_optimizer(g: nx.Graph) -> Tuple[Set[int], nx.Graph]:
     return (set(), g)
 
 
-def default_node_to_patch_mapper(
-    g: nx.Graph, _: Set[int]
-) -> List[int]:
+def default_node_to_patch_mapper(g: nx.Graph, _: Set[int]) -> List[int]:
     return [x for x in range(g.number_of_nodes())]
 
 
@@ -136,7 +134,7 @@ class TwoRowSubstrateScheduler:
         # fmt: on
 
     def get_summary(self):
-        print(f'reduce from {self.input_graph.number_of_nodes()} to {len(self.measurement_steps)}')
+        print(f"reduce from {self.input_graph.number_of_nodes()} to {len(self.measurement_steps)}")
 
     def get_instructions(self):
         # TODO: add labeling phase
