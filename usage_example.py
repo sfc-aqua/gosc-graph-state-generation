@@ -2,12 +2,12 @@ from timeit import default_timer as timer
 
 import networkx as nx
 
-from optimizers import (
+from src.graph_state_generation.optimizers import (
     approximate_static_stabilizer_reduction,
     greedy_stabilizer_measurement_scheduler,
     random_mapper,
 )
-from substrate_scheduler import TwoRowSubstrateScheduler
+from src.graph_state_generation.substrate_scheduler import TwoRowSubstrateScheduler
 
 
 def gen_erdos_renyi_graph_single_component(n, m):
@@ -24,7 +24,7 @@ nothing_compiler = TwoRowSubstrateScheduler(g)
 st = timer()
 nx.algorithms.approximation.maximum_independent_set(g)
 ed = timer()
-print(f'time taken - {ed - st}s')
+print(f"time taken - {ed - st}s")
 
 nothing_compiler.run()
 nothing_compiler.get_summary()
