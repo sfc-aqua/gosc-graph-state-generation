@@ -134,7 +134,9 @@ class TwoRowSubstrateScheduler:
         # fmt: on
 
     def get_summary(self):
-        print(f"reduce from {self.input_graph.number_of_nodes()} to {len(self.measurement_steps)}")
+        print(
+            f"reduce from {self.input_graph.number_of_nodes()} to {len(self.measurement_steps)}"
+        )
 
     def get_instructions(self):
         # TODO: add labeling phase
