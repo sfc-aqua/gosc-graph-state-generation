@@ -19,7 +19,9 @@ def gen_erdos_renyi_graph_single_component(n, m):
         return gen_erdos_renyi_graph_single_component(n, m)
 
 
-g = gen_erdos_renyi_graph_single_component(500, 2500)
+# g = gen_erdos_renyi_graph_single_component(500, 2500)
+# g = gen_erdos_renyi_graph_single_component(10, 9)
+g = nx.cycle_graph(10)
 nothing_compiler = TwoRowSubstrateScheduler(g)
 
 st = timer()
@@ -29,6 +31,7 @@ print(f"time taken - {ed - st}s")
 
 nothing_compiler.run()
 nothing_compiler.get_summary()
+nothing_compiler.visualization()
 print("========================================")
 
 scheduler_only_compiler = TwoRowSubstrateScheduler(
@@ -36,6 +39,7 @@ scheduler_only_compiler = TwoRowSubstrateScheduler(
 )
 scheduler_only_compiler.run()
 scheduler_only_compiler.get_summary()
+scheduler_only_compiler.visualization()
 print("========================================")
 
 for _ in range(2):
@@ -58,3 +62,4 @@ for _ in range(2):
     )
     faster_compiler.run()
     faster_compiler.get_summary()
+    faster_compiler.visualization()

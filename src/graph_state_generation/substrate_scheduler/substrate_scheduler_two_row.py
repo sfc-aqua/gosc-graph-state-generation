@@ -1,14 +1,11 @@
 #! /bin/usr/env python3
-from enum import Enum
 from timeit import default_timer as timer
 from typing import List, Set, Tuple
 
 import networkx as nx
 
-
-class Basis(Enum):
-    X = 1
-    Z = 2
+from ..utility import Basis
+from ..visualization_tools import ascii_instruction_visualization
 
 
 def default_pre_mapping_optimizer(g: nx.Graph) -> Tuple[Set[int], nx.Graph]:
@@ -73,8 +70,13 @@ class TwoRowSubstrateScheduler:
         self.patch_state_init: List[Basis] = [Basis.Z] * input_graph.number_of_nodes()
         self.measurement_steps: List[List[Tuple[int, Tuple[int, int]]]] = []
 
-    def visualization(self, fmt="ascii"):
-        pass
+    def visualization(self, fmt="ascii", save=False):
+        if fmt == "ascii":
+            visualizer = ascii_instruction_visualization
+        else:
+            raise ValueError("unknown format")
+
+        visualizer(self.label, self.patch_state_init, self.measurement_steps)
 
     def stabilizer_table(self):
         """print stabilizer of the input graph state in ascii format (I is replaced with _ for better readability).
