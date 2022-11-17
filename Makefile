@@ -65,7 +65,7 @@ github_actions-default:
 # flake8p is a wrapper library that runs flake8 from config in pyproject.toml
 # we can now use it instead of flake8 to lint the code
 flake8p-default: clean
-	$(PYTHON) -m flake8p --ignore=E203,E266,F401,W503 --max-line-length=88 src tests
+	$(PYTHON) -m flake8p --ignore=E203,E266,F401,W503 --max-line-length=102 src tests
 
 mypy-default: clean
 	@echo scanning files with mypy: Please be patient....
