@@ -1,0 +1,1 @@
+from .gen_graphs import gen_erdos_renyi_graph_single_component

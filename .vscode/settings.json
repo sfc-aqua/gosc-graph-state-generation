@@ -20,5 +20,11 @@
         "**/__pycache__/": true,
         "**/.pytest_cache/": true,
         "**/.idea/": true
-    }
+    },
+    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": true,
+    "python.linting.flake8Args": [
+        "--max-line-length=102",
+        "--ignore=E203,E266,F401,W605",
+    ],
 }

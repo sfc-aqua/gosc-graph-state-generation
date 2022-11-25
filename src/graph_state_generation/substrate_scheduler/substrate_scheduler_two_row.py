@@ -33,15 +33,20 @@ class TwoRowSubstrateScheduler:
     2. node-to-patch mapping
     3. stabilizer measurement scheduling
 
-    If the optimizer functions are not provided, no optimization is done and only one stabilizer measurement is performed at each time step resulting in O(V) time step
+    If the optimizer functions are not provided, no optimization is done and only one stabilizer
+    measurement is performed at each time step resulting in O(V) time step
     """
 
     def __init__(
         self,
         input_graph: nx.Graph,
-        pre_mapping_optimizer=default_pre_mapping_optimizer,  # nx.Graph -> Tuple(Set(stabilizer_to_skip), nx.Graph)
-        node_to_patch_mapper=default_node_to_patch_mapper,  # nx.Graph -> List(int) of length V
-        stabilizer_scheduler=default_stabilizer_scheduler,  # [(S_i, (min_i, max_i))] -> [[(S_i, (min_i, max_i))], [(S_j, (min_j, max_j))]] with length equals to number of timestep where S_i, min_i, and max_i are int
+        # nx.Graph -> Tuple(Set(stabilizer_to_skip), nx.Graph)
+        pre_mapping_optimizer=default_pre_mapping_optimizer,
+        # nx.Graph -> List(int) of length V
+        node_to_patch_mapper=default_node_to_patch_mapper,
+        # [(S_i, (min_i, max_i))] -> [[(S_i, (min_i, max_i))], [(S_j, (min_j, max_j))]] with length
+        # equals to number of timestep where S_i, min_i, and max_i are int
+        stabilizer_scheduler=default_stabilizer_scheduler,
     ):
         """pre_mapping_optimizer -"""
 
@@ -55,9 +60,7 @@ class TwoRowSubstrateScheduler:
 
         self.stabilizer_to_measure: List[
             Tuple[int, Tuple[int, int]]
-        ] = (
-            []
-        )  # (G_i, (ancilla_left, ancilla_right)) where G_i denote stabilizer of patch i
+        ] = []  # (G_i, (ancilla_left, ancilla_right)) where G_i denote stabilizer of patch i
         self.pre_mapping_optimizer = pre_mapping_optimizer
         self.node_to_patch_mapper = node_to_patch_mapper
         self.stabilizer_scheduler = stabilizer_scheduler
@@ -79,7 +82,8 @@ class TwoRowSubstrateScheduler:
         visualizer(self.label, self.patch_state_init, self.measurement_steps)
 
     def stabilizer_table(self):
-        """print stabilizer of the input graph state in ascii format (I is replaced with _ for better readability).
+        """print stabilizer of the input graph state in ascii format
+        (I is replaced with _ for better readability).
         Only support up to 100 vertices."""
         n = self.input_graph.number_of_nodes()
         stabilizers_str: List[str] = [""] * n
@@ -97,14 +101,13 @@ class TwoRowSubstrateScheduler:
         print("\n".join(stabilizers_str))
 
     def run(self):
-        """Execute the three phases on creating the input graph state into Litinski's GoSC ruleset instructions.
+        """Execute the three phases on creating the input graph state into
+        Litinski's GoSC ruleset instructions.
         This function will also output the running time of each phase."""
 
         # graph optimization
         pre_opt_start_time = timer()
-        stabilizer_to_skip, transformmed_graph = self.pre_mapping_optimizer(
-            self.input_graph
-        )
+        stabilizer_to_skip, transformmed_graph = self.pre_mapping_optimizer(self.input_graph)
         pre_opt_end_time = timer()
 
         # node to patch mapping / labelling
@@ -122,9 +125,7 @@ class TwoRowSubstrateScheduler:
                 self.patch_state_init[mi] = Basis.X
                 continue
 
-            self.stabilizer_to_measure.append(
-                (mi, (min(mi, min(mvs)), (max(mi, max(mvs)))))
-            )
+            self.stabilizer_to_measure.append((mi, (min(mi, min(mvs)), (max(mi, max(mvs))))))
         self.measurement_steps = self.stabilizer_scheduler(self.stabilizer_to_measure)
         scheduling_end_time = timer()
 
@@ -136,9 +137,7 @@ class TwoRowSubstrateScheduler:
         # fmt: on
 
     def get_summary(self):
-        print(
-            f"reduce from {self.input_graph.number_of_nodes()} to {len(self.measurement_steps)}"
-        )
+        print(f"reduce from {self.input_graph.number_of_nodes()} to {len(self.measurement_steps)}")
 
     def get_instructions(self):
         # TODO: add labeling phase

@@ -19,9 +19,7 @@ def ascii_instruction_visualization(
 
     # printing
     label_line = "| " + " | ".join(inverse_map_str) + " |"
-    patch_state_line = (
-        "| " + " | ".join([f" {i.name} " for i in patch_initialized_state]) + " |"
-    )
+    patch_state_line = "| " + " | ".join([f" {i.name} " for i in patch_initialized_state]) + " |"
     label_border = "|_" + "_|_".join(["___" for _ in inverse_map_str]) + "_|"
 
     print(label_line)

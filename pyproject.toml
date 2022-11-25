@@ -54,4 +54,7 @@ log_level="INFO"
 
 [tool.flake8]
 ignore = ['E203', 'E266', 'F401', 'W605']
-max-line-length = 88
+max-line-length = 102
+
+[tool.black]
+line-length = 102
