@@ -15,7 +15,8 @@ def approximate_static_stabilizer_reduction(g: nx.Graph) -> Tuple[Set[int], nx.G
 def fast_maximal_independent_set_stabilizer_reduction(
     g: nx.Graph,
 ) -> Tuple[Set[int], nx.Graph]:
-    """Repeatly run maximal independent set on random vertex to find largest maximal independent set."""
+    """Repeatly run maximal independent set on a random vertex to find
+    largest maximal independent set."""
     i_set = nx.maximal_independent_set(g)
     max_retry = np.log2(g.number_of_nodes())
     retry = max_retry
