@@ -1,6 +1,3 @@
-import sys
-
-sys.path.append("..")
 from src.graph_state_generation.optimizers.stabilizer_measurement_scheduler import (
     greedy_stabilizer_measurement_scheduler,
 )
