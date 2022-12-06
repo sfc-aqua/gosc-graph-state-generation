@@ -14,7 +14,7 @@ Substrate Scheduler is a product of the [AQUA](https://aqua.sfc.wide.ad.jp/), [Q
 
 ## Features
 
-Substrate Scheduler create graph states using stabilizer formalism. In the current version, it provides 3 reduces the time steps required to create a graph state via stabilizer formalism (Note that the time step here is the total number of steps required to create the graph state considering the parallel measurement of the stabilizers) :
+`Substrate Scheduler` creates graph states using stabilizer formalism. In the current version, it provides 3 optimzers to reduce the time steps required to create a graph state via stabilizer formalism (note that the time step here is the total number of steps required to create the graph state considering the parallel measurement of the stabilizers) :
 
 - pre_mapping_optimizer
 
@@ -31,7 +31,12 @@ Substrate Scheduler create graph states using stabilizer formalism. In the curre
 
     By knowing the start and end positions of each stabilizer generator, `stabilizer_measurement_scheduler` will optimally schedule the stabilizer generators to be measured and reduce the time cost by parallelly measuring as many stabilizers as possible.
 
-
+| 006 | 005 | 003 | 000 | 002 | 008 | 001 | 009 | 004 | 007 |
+|  X  |  Z  |  Z  |  X  |  X  |  X  |  Z  |  Z  |  X  |  Z  |
+|_____|_____|_____|_____|_____|_____|_____|_____|_____|_____|
+    ancilla start |---------------------| ancilla end
+           One example of the layout after mapping.
+           
 ## Installation
 
 <!---Even though it's intended to be used with Orquestra, `orquestra-quantum` can be also used as a standalone Python module.
