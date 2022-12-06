@@ -2,9 +2,10 @@
 
 ## What is it?
 
-`Substrate Scheduler` is a tool with core functionalities for generating arbitrary quantum graph states developed by [AQUA](https://aqua.sfc.wide.ad.jp/), [QTS](https://quantumts.org) and [Zapata](https://www.zapatacomputing.com) for the [Bench-Q](https://quantumts.org/bench-q/) project.
-It is based on lattice surgery, especially the rules in the paper "A Game of Surface Codes: Large-Scale Quantum Computing with Lattice Surgery".
-`Substrate Scheduler` provides:
+`Substrate Scheduler` is a tool with core functionalities to efficiently create the input graph state fault-tolerantly using the rules given by Litinski’s "A Game of Surface Codes: Large-Scale Quantum Computing with Lattice Surgery" (GOSC) paper with the goal of minimizing the space-time volume cost. The space-time volume cost is defined to be the space multiplied by the time where space is defined by the area of patches in units of square tiles and time in units of time step as defined in the GoSC paper or one round of syndrome measurement. 
+
+Substrate Scheduler is a product of the [AQUA](https://aqua.sfc.wide.ad.jp/), [QTS](https://quantumts.org) and [Zapata](https://www.zapatacomputing.com) for the [Bench-Q](https://quantumts.org/bench-q/) project.
+
 <!---
 - core functionalities required to run experiments, such as the `Circuit` class.
 - interfaces for implementing other Orquestra modules, such as quantum backends.
