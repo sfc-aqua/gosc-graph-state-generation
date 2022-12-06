@@ -2,7 +2,7 @@
 
 ## About The Project
 
-`Substrate Scheduler` is a tool with core functionalities to efficiently create the input graph state fault-tolerantly using the rules given by Litinski’s "A Game of Surface Codes: Large-Scale Quantum Computing with Lattice Surgery" (GOSC) paper with the goal of minimizing the space-time volume cost. The space-time volume cost is defined to be the space multiplied by the time where space is defined by the area of patches in units of square tiles and time in units of time step as defined in the GoSC paper or one round of syndrome measurement. 
+`Substrate Scheduler` is a tool with core functionalities to efficiently create the input graph state fault-tolerantly using the rules given by Litinski’s "A Game of Surface Codes: Large-Scale Quantum Computing with Lattice Surgery" (GOSC) paper with the goal of minimizing the space-time volume cost.  The space-time volume cost is defined to be the space multiplied by the time where space is defined by the area of patches in units of square tiles and time in units of time step as defined in the GoSC paper or one round of syndrome measurement. 
 
 Substrate Scheduler is a product of the [AQUA](https://aqua.sfc.wide.ad.jp/), [QTS](https://quantumts.org) and [Zapata](https://www.zapatacomputing.com) for the [Bench-Q](https://quantumts.org/bench-q/) project.
 
@@ -11,6 +11,18 @@ Substrate Scheduler is a product of the [AQUA](https://aqua.sfc.wide.ad.jp/), [Q
 - interfaces for implementing other Orquestra modules, such as quantum backends.
 - basic data structures and functions for quantum computing.
 --->
+
+## Features
+Substrate Scheduler create graph states using stabilizer formalism. In the current version, it provides 3 reduces the time steps required to create a graph state via stabilizer formalism (Note that the time step here is the total number of steps required to create the graph state considering the parallel measurement of the stabilizers) :
+- pre_mapping_optimizer
+
+- node_to_patch_mapper
+tbd
+- stabilizer measurement scheduler
+Suppose we have already decided where each node in the graph is mapped to which patch, in order to measure a stabilizer generator in this configuration, we need an ancilla patch that covers all the nodes defined in the stabilizer generator. This means that any stabilizer generator which includes a node between the left-most and the right-most nodes of the stabilizer we are trying to measure cannot be measured at the same time. 
+By knowing the start and end positions of each stabilizer generator, `stabilizer_measurement_scheduler` will optimally schedule the stabilizer generators to be measured and reduce the time cost by parallelly measuring as many stabilizers as possible.
+
+
 ## Installation
 
 <!---Even though it's intended to be used with Orquestra, `orquestra-quantum` can be also used as a standalone Python module.
@@ -95,4 +107,4 @@ We are using automatic tools for style and type checking. In order to make sure 
 See the [open issues](https://github.com/sfc-aqua/gosc-graph-state-generation/issues) for a full list of proposed features (and known issues).
 
 ## License
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the MIT License. See `LICENSE` for more information.
