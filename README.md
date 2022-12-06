@@ -30,13 +30,15 @@ Substrate Scheduler is a product of the [AQUA](https://aqua.sfc.wide.ad.jp/), [Q
     Suppose we have already decided where each node in the graph is mapped to which patch, in order to measure a stabilizer generator in this configuration, we need an ancilla patch that covers all the nodes defined in the stabilizer generator. This means that any stabilizer generator which includes a node between the left-most and the right-most nodes of the stabilizer we are trying to measure cannot be measured at the same time. 
 
     By knowing the start and end positions of each stabilizer generator, `stabilizer_measurement_scheduler` will optimally schedule the stabilizer generators to be measured and reduce the time cost by parallelly measuring as many stabilizers as possible.
-
+    
+```
 | 006 | 005 | 003 | 000 | 002 | 008 | 001 | 009 | 004 | 007 |
 |  X  |  Z  |  Z  |  X  |  X  |  X  |  Z  |  Z  |  X  |  Z  |
 |_____|_____|_____|_____|_____|_____|_____|_____|_____|_____|
     ancilla start |---------------------| ancilla end
            One example of the layout after mapping.
-           
+```
+
 ## Installation
 
 <!---Even though it's intended to be used with Orquestra, `orquestra-quantum` can be also used as a standalone Python module.
