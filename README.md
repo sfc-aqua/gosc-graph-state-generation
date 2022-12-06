@@ -1,28 +1,23 @@
-# gosc-graph-state-generation
-Building compiler for generate graph state based on "A Game of Surface Codes: Large-Scale Quantum Computing with Lattice Surgery".
-
-# Below I have provided a template to Work off of in this Readme
-
-# orquestra-quantum
+# Substrate Scheduler
 
 ## What is it?
 
-`orquestra-quantum` is a library with core functionalities for quantum computing developed by [Zapata](https://www.zapatacomputing.com) for our [Orquestra](https://www.zapatacomputing.com/orquestra/) platform.
-
-`orquestra-quantum` provides:
-
+`Substrate Scheduler` is a tool with core functionalities for generating arbitrary quantum graph states developed by [AQUA](https://aqua.sfc.wide.ad.jp/), [QTS](https://quantumts.org) and [Zapata](https://www.zapatacomputing.com) for the [Bench-Q](https://quantumts.org/bench-q/) project.
+It is based on lattice surgery, especially the rules in the paper "A Game of Surface Codes: Large-Scale Quantum Computing with Lattice Surgery".
+`Substrate Scheduler` provides:
+<!---
 - core functionalities required to run experiments, such as the `Circuit` class.
 - interfaces for implementing other Orquestra modules, such as quantum backends.
 - basic data structures and functions for quantum computing.
-
+--->
 ## Installation
 
-Even though it's intended to be used with Orquestra, `orquestra-quantum` can be also used as a standalone Python module.
-To install it, you just need to run `pip install .` from the main directory.
+<!---Even though it's intended to be used with Orquestra, `orquestra-quantum` can be also used as a standalone Python module.
+To install it, you just need to run `pip install .` from the main directory.--->
 
 
 ## Usage
-
+<!---
 Here's an example of how to use methods from `orquestra-quantum` to run a circuit locally. The program runs a circuit with a single Hadamard gate 100 times and returns the results:
 
 ```python
@@ -36,7 +31,7 @@ def orquestra_quantum_example_function()
     measurements = sim.run_circuit_and_measure(circ, nsamples)
     return measurements.get_counts()
 ```
-
+--->
 
 ## Development and Contribution
 
@@ -63,3 +58,6 @@ We are using automatic tools for style and type checking. In order to make sure 
 ### ascii visualization
 
 ### pictures
+
+## License
+Distributed under the MIT License. See `LICENSE.txt` for more information.
