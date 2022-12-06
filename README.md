@@ -19,9 +19,10 @@ Substrate Scheduler create graph states using stabilizer formalism. In the curre
 - pre_mapping_optimizer
 
     From the definition of graph state, we know that we can reduce the number of stabilizer generator to be measured by initializing the qubits in a way that they are already stabilized by some stabilizer generators. For example, initialize node a in X-basis (|+> state) while initializing neighbor nodes of a in Z basis (|0> state).  
-    By converting the problem of finding the optimal reduction to maximum independent set problem, `pre_mapping_optimizer` reduce the maximum number of stabilizer generators.
+    By converting the problem of finding the optimal reduction to maximum independent set problem, `pre_mapping_optimizer` reduces the maximum number of stabilizer generators before mapping.
 
 - node_to_patch_mapper
+
     tbd
 
 - stabilizer measurement scheduler
