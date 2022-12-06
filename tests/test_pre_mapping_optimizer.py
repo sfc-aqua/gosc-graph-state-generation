@@ -1,6 +1,6 @@
 import networkx as nx
 
-from src.graph_state_generation.optimizers.pre_mapping_optimizer import (
+from graph_state_generation.optimizers.pre_mapping_optimizer import (
     fast_maximal_independent_set_stabilizer_reduction,
 )
 
