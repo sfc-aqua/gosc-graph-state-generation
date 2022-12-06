@@ -1,6 +1,6 @@
 # Substrate Scheduler
 
-## What is it?
+## About The Project
 
 `Substrate Scheduler` is a tool with core functionalities to efficiently create the input graph state fault-tolerantly using the rules given by Litinski’s "A Game of Surface Codes: Large-Scale Quantum Computing with Lattice Surgery" (GOSC) paper with the goal of minimizing the space-time volume cost. The space-time volume cost is defined to be the space multiplied by the time where space is defined by the area of patches in units of square tiles and time in units of time step as defined in the GoSC paper or one round of syndrome measurement. 
 
@@ -80,11 +80,19 @@ Alternatively you can also run `pytest .`.
 
 We are using automatic tools for style and type checking. In order to make sure the code is compliant with them please run: `make style` from the main directory (this requires `dev` dependencies).
 
-## Explain visualization techniques
+<!---## Explain visualization techniques
 
 ### ascii visualization
 
 ### pictures
+--->
+
+## In-progress work:
+
+- [ ] The performance of node_to_patch_mapper needs further testing and improvement.
+- [ ] Tests are still being polished.
+
+See the [open issues](https://github.com/sfc-aqua/gosc-graph-state-generation/issues) for a full list of proposed features (and known issues).
 
 ## License
 Distributed under the MIT License. See `LICENSE.txt` for more information.
