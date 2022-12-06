@@ -15,6 +15,8 @@ It is based on lattice surgery, especially the rules in the paper "A Game of Sur
 <!---Even though it's intended to be used with Orquestra, `orquestra-quantum` can be also used as a standalone Python module.
 To install it, you just need to run `pip install .` from the main directory.--->
 
+To install `Substrate Scheduler`, you just need to run `git clone https://github.com/sfc-aqua/gosc-graph-state-generation.git` 
+`Substrate Scheduler`is written is Python, except for a Python3 compiler, you will also need the networkx, matplotlib and numpy packages.
 
 ## Usage
 <!---
