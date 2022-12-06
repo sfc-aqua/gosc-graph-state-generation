@@ -4,13 +4,15 @@ from typing import List, Set, Tuple
 
 import networkx as nx
 
-from ..utility import Basis
-from ..visualization_tools import ascii_instruction_visualization
+import sys
+sys.path.append("..")
+
+from utility import Basis
+from visualization_tools import ascii_instruction_visualization
 
 
 def default_pre_mapping_optimizer(g: nx.Graph) -> Tuple[Set[int], nx.Graph]:
     return (set(), g)
-
 
 def default_node_to_patch_mapper(g: nx.Graph, _: Set[int]) -> List[int]:
     return [x for x in range(g.number_of_nodes())]
