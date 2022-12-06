@@ -13,13 +13,21 @@ Substrate Scheduler is a product of the [AQUA](https://aqua.sfc.wide.ad.jp/), [Q
 --->
 
 ## Features
+
 Substrate Scheduler create graph states using stabilizer formalism. In the current version, it provides 3 reduces the time steps required to create a graph state via stabilizer formalism (Note that the time step here is the total number of steps required to create the graph state considering the parallel measurement of the stabilizers) :
+
 - pre_mapping_optimizer
+
+From the definition of graph state, we know that we can reduce the number of stabilizer generator to be measured by initializing the qubits in a way that they are already stabilized by some stabilizer generators. For example, initialize node a in X-basis (|+> state) while initializing neighbor nodes of a in Z basis (|0> state).  
+By converting the problem of finding the optimal reduction to maximum independent set problem, `pre_mapping_optimizer` reduce the maximum number of stabilizer generators.
 
 - node_to_patch_mapper
 tbd
+
 - stabilizer measurement scheduler
+
 Suppose we have already decided where each node in the graph is mapped to which patch, in order to measure a stabilizer generator in this configuration, we need an ancilla patch that covers all the nodes defined in the stabilizer generator. This means that any stabilizer generator which includes a node between the left-most and the right-most nodes of the stabilizer we are trying to measure cannot be measured at the same time. 
+
 By knowing the start and end positions of each stabilizer generator, `stabilizer_measurement_scheduler` will optimally schedule the stabilizer generators to be measured and reduce the time cost by parallelly measuring as many stabilizers as possible.
 
 
