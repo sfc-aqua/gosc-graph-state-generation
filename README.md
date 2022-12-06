@@ -35,7 +35,7 @@ Substrate Scheduler is a product of the [AQUA](https://aqua.sfc.wide.ad.jp/), [Q
 | 006 | 005 | 003 | 000 | 002 | 008 | 001 | 009 | 004 | 007 |
 |  X  |  Z  |  Z  |  X  |  X  |  X  |  Z  |  Z  |  X  |  Z  |
 |_____|_____|_____|_____|_____|_____|_____|_____|_____|_____|
-        ancilla start |---------------------| ancilla end
+     ancilla start |---------------------| ancilla end
            One example of the layout after mapping
 ```
 
