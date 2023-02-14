@@ -10,7 +10,10 @@ def ascii_instruction_visualization(
 ):
     n = len(node_to_patch_mapping)
     if n > 1000:
-        raise NotImplementedError("cannot handle nodes more than 1000 at the moment.")
+        raise NotImplementedError(
+            f"Your graph has {n} nodees. However, we cannot visulize more "
+            "than 1000 nodes at the moment."
+        )
     inverse_map = [0] * n
     for i in node_to_patch_mapping:
         inverse_map[node_to_patch_mapping[i]] = i
