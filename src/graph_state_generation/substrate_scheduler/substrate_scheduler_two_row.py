@@ -109,11 +109,13 @@ class TwoRowSubstrateScheduler:
         pre_opt_start_time = timer()
         stabilizer_to_skip, transformmed_graph = self.pre_mapping_optimizer(self.input_graph)
         pre_opt_end_time = timer()
+        print(f"pre-mapping optimization took - {pre_opt_end_time - pre_opt_start_time}s")
 
         # node to patch mapping / labelling
         labelling_start_time = timer()
         self.label = self.node_to_patch_mapper(transformmed_graph, set())
         labelling_end_time = timer()
+        print(f"node to patch mapping took    - {labelling_end_time - labelling_start_time}s")
 
         scheduling_start_time = timer()
         # from here on we work on patch labelling and not labelling of the input graph
@@ -128,13 +130,7 @@ class TwoRowSubstrateScheduler:
             self.stabilizer_to_measure.append((mi, (min(mi, min(mvs)), (max(mi, max(mvs))))))
         self.measurement_steps = self.stabilizer_scheduler(self.stabilizer_to_measure)
         scheduling_end_time = timer()
-
-        # fmt: off
-        # report time
-        print(f'pre-mapping optimization took - {pre_opt_end_time - pre_opt_start_time}s')
-        print(f'node to patch mapping took    - {labelling_end_time - labelling_start_time}s')
-        print(f'measurement scheduler took    - {scheduling_end_time - scheduling_start_time}s')
-        # fmt: on
+        print(f"measurement scheduler took    - {scheduling_end_time - scheduling_start_time}s")
 
     def get_summary(self):
         print(f"reduce from {self.input_graph.number_of_nodes()} to {len(self.measurement_steps)}")
