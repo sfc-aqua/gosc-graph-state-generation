@@ -68,6 +68,7 @@ class TwoRowSubstrateScheduler:
         self.pre_mapping_optimizer = pre_mapping_optimizer
         self.node_to_patch_mapper = node_to_patch_mapper
         self.stabilizer_scheduler = stabilizer_scheduler
+        self.verbose = verbose
 
         # parse the input graph and set class attributes
         self.adj_list = [vs for _, vs in nx.to_dict_of_lists(input_graph).items()]
