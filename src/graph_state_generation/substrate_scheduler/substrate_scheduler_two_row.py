@@ -120,7 +120,7 @@ class TwoRowSubstrateScheduler:
         labelling_start_time = timer()
         self.label = self.node_to_patch_mapper(transformmed_graph, set())
         labelling_end_time = timer()
-        if self.verbose()
+        if self.verbose:
             print(f"node to patch mapping took    - {labelling_end_time - labelling_start_time}s")
 
         scheduling_start_time = timer()
