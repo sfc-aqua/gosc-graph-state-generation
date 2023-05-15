@@ -169,7 +169,7 @@ def test_by_kind(graph_type, graph_size, step, mapper=min_cut_mapper):
             # write a row to the csv file
             writer.writerow(result)
 
-        x = range(10, graph_size,step)
+        x = range(10, graph_size, step)
         # plt.style.use("ggplot")
         plt.figure(figsize=(8, 6))
         before = [x[0] for x in result]
