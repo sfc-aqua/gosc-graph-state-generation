@@ -27,6 +27,7 @@ def test_max_independet_set_reduction_1():
         5,
     ]
 
+
 def test_max_independet_set_reduction_2():
     graph_2 = {0: [1, 2], 1: [0, 3], 2: [0, 5], 3: [1, 4], 4: [1, 2, 3, 5], 5: [2, 4]}
     G_2 = nx.Graph(graph_2)
