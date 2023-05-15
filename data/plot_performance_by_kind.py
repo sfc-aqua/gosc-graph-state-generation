@@ -232,3 +232,6 @@ def test_by_kind(graph_type, graph_size, step, mapper=min_cut_mapper):
         plt.ylabel("Time step(s)")
         plt.legend(loc="upper left")
         plt.savefig(f"complete{i}.png")
+
+
+test_by_kind("line", 40, 10)
