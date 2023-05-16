@@ -17,8 +17,6 @@ from src.graph_state_generation.optimizers import (
 )
 from src.graph_state_generation.substrate_scheduler import TwoRowSubstrateScheduler
 
-from networkx.algorithms.approximation import maximum_independent_set
-
 warnings.filterwarnings("ignore", category=UserWarning)
 
 paras = {
@@ -39,199 +37,63 @@ l_color = [
 ]
 
 
-def test_by_kind(graph_type, graph_size, step, mapper=min_cut_mapper):
-    result = []
-    if graph_type == "star":
-        for i in range(10, graph_size, step):
+def run_compiler(graph, mapper):
+    compiler = TwoRowSubstrateScheduler(
+        graph,
+        pre_mapping_optimizer=fast_maximal_independent_set_stabilizer_reduction,
+        node_to_patch_mapper=mapper,
+        stabilizer_scheduler=greedy_stabilizer_measurement_scheduler,
+    )
+    compiler.run()
+    return [compiler.input_graph.number_of_nodes(), len(compiler.measurement_steps)]
+
+
+def test_by_kind(graph_type, graph_size=100, step=10, mapper=min_cut_mapper):
+    """
+    Parameters:
+    - graph_type: Available graph types: star, line, random_tree, complete.
+    - graph size: The number of vertices in the largest graph to be tested.
+    - step: The number of vertices to increase at each step.
+    - mapper: The mapper to be compared with the random mapper.
+    """
+
+    results = []
+    for i in range(10, graph_size + 1, step):
+        if graph_type == "star":
             graph = nx.star_graph(i)
-
-            compiler = TwoRowSubstrateScheduler(
-                graph,
-                pre_mapping_optimizer=fast_maximal_independent_set_stabilizer_reduction,
-                node_to_patch_mapper=random_mapper,
-                stabilizer_scheduler=greedy_stabilizer_measurement_scheduler,
-            )
-            compiler.run()
-            compiler_map = TwoRowSubstrateScheduler(
-                graph,
-                pre_mapping_optimizer=fast_maximal_independent_set_stabilizer_reduction,
-                node_to_patch_mapper=mapper,
-                stabilizer_scheduler=greedy_stabilizer_measurement_scheduler,
-            )
-            compiler_map.run()
-            result.append(
-                [
-                    compiler.input_graph.number_of_nodes(),
-                    len(compiler.measurement_steps),
-                    len(compiler_map.measurement_steps),
-                ]
-            )
-
-        with open(f"star_{i}.csv", "w", newline="") as file:
-            # create the csv writer
-            writer = csv.writer(file)
-            # write a row to the csv file
-            writer.writerow(result)
-
-        x = range(10, graph_size, step)
-        # plt.style.use("ggplot")
-        plt.figure(figsize=(8, 6))
-        before = [x[0] for x in result]
-        random = [x[1] for x in result]
-        min_map = [x[2] for x in result]
-
-        plt.plot(x, before, "+-", color=l_color[2], label="Naive Time Steps")
-        plt.plot(x, random, "o-", color=l_color[0], label="Random Mapper")
-        plt.plot(x, min_map, "*-", color=l_color[1], label="MinCut Mapper")
-
-        plt.xlabel("Number of Vertices")
-        plt.ylabel("Time Step(s)")
-        # plt.grid(True)
-        plt.legend(loc="upuiper left")
-        plt.savefig(f"star_{i}.png")
-    elif graph_type == "line":
-        for i in range(10, graph_size, step):
+        elif graph_type == "line":
             graph = nx.path_graph(i)
-
-            compiler = TwoRowSubstrateScheduler(
-                graph,
-                pre_mapping_optimizer=fast_maximal_independent_set_stabilizer_reduction,
-                node_to_patch_mapper=random_mapper,
-                stabilizer_scheduler=greedy_stabilizer_measurement_scheduler,
-            )
-            compiler.run()
-            compiler_map = TwoRowSubstrateScheduler(
-                graph,
-                pre_mapping_optimizer=fast_maximal_independent_set_stabilizer_reduction,
-                node_to_patch_mapper=mapper,
-                stabilizer_scheduler=greedy_stabilizer_measurement_scheduler,
-            )
-            compiler_map.run()
-            result.append(
-                [
-                    compiler.input_graph.number_of_nodes(),
-                    len(compiler.measurement_steps),
-                    len(compiler_map.measurement_steps),
-                ]
-            )
-
-        with open(f"line_{i}.csv", "w", newline="") as file:
-            # create the csv writer
-            writer = csv.writer(file)
-            # write a row to the csv file
-            writer.writerow(result)
-
-        x = range(10, graph_size, step)
-        # plt.style.use("ggplot")
-        plt.figure(figsize=(8, 6))
-        before = [x[0] for x in result]
-        random = [x[1] for x in result]
-        min_map = [x[2] for x in result]
-
-        plt.plot(x, before, "+-", color=l_color[2], label="Naive Time Steps")
-        plt.plot(x, random, "o-", color=l_color[0], label="Random Mapper")
-        plt.plot(x, min_map, "*-", color=l_color[1], label="MinCut Mapper")
-
-        plt.xlabel("Number of Vertices")
-        plt.ylabel("Time step(s)")
-        plt.legend(loc="upper left")
-        plt.savefig(f"line_{i}.png")
-    elif graph_type == "random_tree":
-        random_seed = 10
-        for i in range(10, graph_size, step):
+        elif graph_type == "random_tree":
+            random_seed = 10
             graph = nx.random_tree(i, seed=random_seed)
-
-            compiler = TwoRowSubstrateScheduler(
-                graph,
-                pre_mapping_optimizer=fast_maximal_independent_set_stabilizer_reduction,
-                node_to_patch_mapper=random_mapper,
-                stabilizer_scheduler=greedy_stabilizer_measurement_scheduler,
-            )
-            compiler.run()
-            compiler_map = TwoRowSubstrateScheduler(
-                graph,
-                pre_mapping_optimizer=fast_maximal_independent_set_stabilizer_reduction,
-                node_to_patch_mapper=mapper,
-                stabilizer_scheduler=greedy_stabilizer_measurement_scheduler,
-            )
-            compiler_map.run()
-            result.append(
-                [
-                    compiler.input_graph.number_of_nodes(),
-                    len(compiler.measurement_steps),
-                    len(compiler_map.measurement_steps),
-                ]
-            )
-
-        with open(f"random_tree_{i}.csv", "w", newline="") as file:
-            # create the csv writer
-            writer = csv.writer(file)
-            # write a row to the csv file
-            writer.writerow(result)
-
-        x = range(10, graph_size, step)
-        # plt.style.use("ggplot")
-        plt.figure(figsize=(8, 6))
-        before = [x[0] for x in result]
-        random = [x[1] for x in result]
-        min_map = [x[2] for x in result]
-
-        plt.plot(x, before, "+-", color=l_color[2], label="Naive Time Steps")
-        plt.plot(x, random, "o-", color=l_color[0], label="Random Mapper")
-        plt.plot(x, min_map, "*-", color=l_color[1], label="MinCut Mapper")
-
-        plt.xlabel("Number of Vertices")
-        plt.ylabel("Time step(s)")
-        plt.legend(loc="upper left")
-        # plt.grid(True)
-        plt.savefig(f"random_tree_{i}.png")
-    elif graph_type == "complete":
-        for i in range(10, graph_size, step):
+        elif graph_type == "complete":
             graph = nx.complete_graph(i)
 
-            compiler = TwoRowSubstrateScheduler(
-                graph,
-                pre_mapping_optimizer=fast_maximal_independent_set_stabilizer_reduction,
-                node_to_patch_mapper=random_mapper,
-                stabilizer_scheduler=greedy_stabilizer_measurement_scheduler,
-            )
-            compiler.run()
-            compiler_map = TwoRowSubstrateScheduler(
-                graph,
-                pre_mapping_optimizer=fast_maximal_independent_set_stabilizer_reduction,
-                node_to_patch_mapper=mapper,
-                stabilizer_scheduler=greedy_stabilizer_measurement_scheduler,
-            )
-            compiler_map.run()
-            result.append(
-                [
-                    compiler.input_graph.number_of_nodes(),
-                    len(compiler.measurement_steps),
-                    len(compiler_map.measurement_steps),
-                ]
-            )
+        # Test with random mapper
+        result_random = run_compiler(graph, random_mapper)
+        result_mapper = run_compiler(graph, mapper)
+        # Append results to the list
+        results.append(result_random + [result_mapper[1]])
+    # Save the results to a CSV file
+    with open(f"{graph_type}_{graph_size}.csv", "w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(results)
+    # Plot the results
+    x = range(10, graph_size + 1, step)
+    # plt.style.use("ggplot")
+    plt.figure(figsize=(8, 6))
+    before = [x[0] for x in results]
+    random = [x[1] for x in results]
+    min_map = [x[2] for x in results]
 
-        with open(f"complete_{i}.csv", "w", newline="") as file:
-            # create the csv writer
-            writer = csv.writer(file)
-            # write a row to the csv file
-            writer.writerow(result)
+    plt.plot(x, before, "+-", color=l_color[2], label="Naive Time Steps")
+    plt.plot(x, random, "o-", color=l_color[0], label="Random Mapper")
+    plt.plot(x, min_map, "*-", color=l_color[1], label="MinCut Mapper")
 
-        x = range(10, graph_size, step)
-        # plt.style.use("ggplot")
-        plt.figure(figsize=(8, 6))
-        before = [x[0] for x in result]
-        random = [x[1] for x in result]
-        min_map = [x[2] for x in result]
-
-        plt.plot(x, before, "+-", color=l_color[2], label="Naive Time Steps")
-        plt.plot(x, random, "o-", color=l_color[0], label="Random Mapper")
-        plt.plot(x, min_map, "*-", color=l_color[1], label="MinCut Mapper")
-
-        plt.xlabel("Number of Vertices")
-        plt.ylabel("Time step(s)")
-        plt.legend(loc="upper left")
-        plt.savefig(f"complete{i}.png")
+    plt.xlabel("Number of Vertices")
+    plt.ylabel("Time step(s)")
+    plt.legend(loc="upper left")
+    plt.savefig(f"{graph_type}_{graph_size}.png")
 
 
-test_by_kind("line", 40, 10)
+test_by_kind(graph_type="line", graph_size=90, step=10, mapper=min_cut_mapper)
