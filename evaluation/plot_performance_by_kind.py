@@ -75,7 +75,7 @@ def test_by_kind(graph_type, graph_size=100, step=10, mapper=min_cut_mapper):
         # Append results to the list
         results.append(result_random + [result_mapper[1]])
     # Save the results to a CSV file
-    with open(f"{graph_type}_{graph_size}.csv", "w", newline="") as file:
+    with open(f"results/{graph_type}_{graph_size}.csv", "w", newline="") as file:
         writer = csv.writer(file)
         writer.writerow(results)
     # Plot the results
@@ -93,7 +93,4 @@ def test_by_kind(graph_type, graph_size=100, step=10, mapper=min_cut_mapper):
     plt.xlabel("Number of Vertices")
     plt.ylabel("Time step(s)")
     plt.legend(loc="upper left")
-    plt.savefig(f"{graph_type}_{graph_size}.png")
-
-
-test_by_kind(graph_type="line", graph_size=90, step=10, mapper=min_cut_mapper)
+    plt.savefig(f"results/{graph_type}_{graph_size}.png")
