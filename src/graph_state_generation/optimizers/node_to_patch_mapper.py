@@ -51,22 +51,24 @@ def karger(graph):
 def min_cut(G, component):
     subgraph = nx.subgraph(G, component)
     adjacency_list = nx.to_dict_of_lists(subgraph)
-    currentLen = 0
-    currentV = {}
-    shortestLen = sys.maxsize
-    shortestV = {}
-    for i in range(10):
-        currentLen, currentV = karger(adjacency_list)
-        if currentLen < shortestLen:
-            shortestLen = currentLen
-            shortestV = copy.deepcopy(currentV)
+    #currentLen = 0
+    #current_edges = {}
+    min_cut_len = sys.maxsize
+    min_cut_edges = {}
+    for i in range(10): ## Repeat the Karger's algorithm several times. 10 is just a trial number.
+        currentLen, current_edges = karger(adjacency_list)
+        if currentLen < min_cut_len:
+            min_cut_len = currentLen
+            #min_cut_edges = copy.deepcopy(current_edges)
+            min_cut_edges = current_edges
+    # Remove minimum cut edges from the original graph
     cut_edge = []
-    keys = list(shortestV.keys())
-    for i in shortestV[keys[0]]:
-        for j in shortestV[keys[1]]:
+    nodes_in_cut = list(min_cut_edges.keys())
+    for i in min_cut_edges[nodes_in_cut[0]]:
+        for j in min_cut_edges[nodes_in_cut[1]]:
             if j in adjacency_list[i]:
                 cut_edge.append([i, j])
-    # print("the shortest length of cut is {}".format(shortestLen))
+    # print("the shortest length of cut is {}".format(min_cut_len))
     # print("the cut edge is {}".format(cut_edge))
     G.remove_edges_from(cut_edge)
     return G
