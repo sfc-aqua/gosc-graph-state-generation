@@ -6,7 +6,7 @@ from src.graph_state_generation.optimizers import (
     approximate_static_stabilizer_reduction,
     fast_maximal_independent_set_stabilizer_reduction,
     greedy_stabilizer_measurement_scheduler,
-    random_mapper,
+    NGAopt_layout,
 )
 from src.graph_state_generation.substrate_scheduler import TwoRowSubstrateScheduler
 
@@ -46,7 +46,7 @@ for _ in range(2):
     better_compiler = TwoRowSubstrateScheduler(
         g,
         pre_mapping_optimizer=approximate_static_stabilizer_reduction,
-        node_to_patch_mapper=random_mapper,
+        node_to_patch_mapper=NGAopt_layout,
         stabilizer_scheduler=greedy_stabilizer_measurement_scheduler,
     )
     better_compiler.run()
@@ -57,7 +57,7 @@ for _ in range(2):
     faster_compiler = TwoRowSubstrateScheduler(
         g,
         pre_mapping_optimizer=fast_maximal_independent_set_stabilizer_reduction,
-        node_to_patch_mapper=random_mapper,
+        node_to_patch_mapper=NGAopt_layout,
         stabilizer_scheduler=greedy_stabilizer_measurement_scheduler,
     )
     faster_compiler.run()
