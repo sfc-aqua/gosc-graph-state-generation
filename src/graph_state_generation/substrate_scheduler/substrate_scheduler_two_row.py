@@ -51,10 +51,9 @@ class TwoRowSubstrateScheduler:
     ):
         """pre_mapping_optimizer -"""
 
-        
         if input_graph == nx.Graph():
             raise ValueError("Graph is empty. Cannot schedule empty graph.")
-        
+
         self.input_graph: nx.Graph = input_graph
         self.label: List[int] = []
         self.adj_list: List[List[int]] = []
