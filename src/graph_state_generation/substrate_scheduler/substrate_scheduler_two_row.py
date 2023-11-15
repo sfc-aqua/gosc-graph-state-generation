@@ -19,7 +19,6 @@ def default_node_to_patch_mapper(g: nx.Graph, _: Set[int]) -> List[int]:
 def default_stabilizer_scheduler(
     stabilizer_to_measure: List[Tuple[int, Tuple[int, int]]]
 ) -> List[List[Tuple[int, Tuple[int, int]]]]:
-
     return list(map(lambda x: [(x[0], x[1])], stabilizer_to_measure))
 
 
@@ -51,10 +50,9 @@ class TwoRowSubstrateScheduler:
     ):
         """pre_mapping_optimizer -"""
 
-        
         if input_graph == nx.Graph():
             raise ValueError("Graph is empty. Cannot schedule empty graph.")
-        
+
         self.input_graph: nx.Graph = input_graph
         self.label: List[int] = []
         self.adj_list: List[List[int]] = []
@@ -69,6 +67,8 @@ class TwoRowSubstrateScheduler:
         self.node_to_patch_mapper = node_to_patch_mapper
         self.stabilizer_scheduler = stabilizer_scheduler
         self.verbose = verbose
+        self.time_steps = None
+        self.edge_weight = None
 
         # parse the input graph and set class attributes
         self.adj_list = [vs for _, vs in nx.to_dict_of_lists(input_graph).items()]
@@ -105,6 +105,37 @@ class TwoRowSubstrateScheduler:
 
         print("\n".join(stabilizers_str))
 
+    def timesteps_for_linear_ancilla_bus(
+        self, g: nx.Graph, layout: List[int], initialized_nodes=[]
+    ) -> int:
+        timesteps_list = []
+        for u in layout:
+            u_index = layout.index(u)
+            touching_edges = [
+                edge
+                for edge in g.edges
+                if (
+                    (layout.index(edge[0]) < u_index and layout.index(edge[1]) > u_index)
+                    or (layout.index(edge[0]) > u_index and layout.index(edge[1]) < u_index)
+                )
+            ]
+
+            touching_nodes = set(node for edge in touching_edges for node in edge if node != u)
+            # Neighbors of node u
+            neighbors = set(g.neighbors(u))
+            combined_nodes = touching_nodes.union(neighbors)
+            timesteps_u = len(combined_nodes) + 1
+            timesteps_list.append(timesteps_u)
+        return max(timesteps_list)
+
+    def total_edge_weight(self, g: nx.Graph, layout: List[int], initialized_nodes=[]) -> int:
+        total_weight = 0
+        for edge in g.edges(data=False):
+            # Weight of an edge is the number of nodes it travels over
+            weight = abs(layout.index(edge[0]) - layout.index(edge[1])) - 1
+            total_weight += weight
+        return total_weight
+
     def run(self):
         """Execute the three phases on creating the input graph state into
         Litinski's GoSC ruleset instructions.
@@ -139,6 +170,13 @@ class TwoRowSubstrateScheduler:
         scheduling_end_time = timer()
         if self.verbose:
             print(f"measurement scheduler took    - {scheduling_end_time - scheduling_start_time}s")
+        assert isinstance(self.input_graph, nx.Graph), "Input graph is not an instance of nx.Graph!"
+        self.time_steps = self.timesteps_for_linear_ancilla_bus(self.input_graph, self.label)
+        if self.verbose:
+            print(f"Timesteps - {self.time_steps}")
+        self.edge_weight = self.total_edge_weight(self.input_graph, self.label)
+        if self.verbose:
+            print(f"Edge Weight - {self.edge_weight}")
 
     def get_summary(self):
         print(f"reduce from {self.input_graph.number_of_nodes()} to {len(self.measurement_steps)}")

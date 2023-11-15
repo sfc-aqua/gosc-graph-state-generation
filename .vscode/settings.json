@@ -1,6 +1,6 @@
 {
     "[python]": {
-        "editor.defaultFormatter": "ms-python.python",
+        "editor.defaultFormatter": "ms-python.black-formatter",
         "editor.formatOnSave": true,
         "editor.codeActionsOnSave": {
             "source.organizeImports": true
@@ -10,7 +10,7 @@
         "--profile",
         "black"
     ],
-    "python.formatting.provider": "black",
+    "python.formatting.provider": "none",
     "python.testing.pytestArgs": [
         "tests"
     ],
