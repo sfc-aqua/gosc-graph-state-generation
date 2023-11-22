@@ -2,30 +2,25 @@ from graph_tool.all import *
 import graph_tool.all as gt
 import matplotlib.pyplot as plt
 import numpy as np
+import random
 
 
 def gen_erdos_renyi_graph_single_component_gt(n, m, seed=51):
     """
     Generate a random Erdős-Rényi graph with a single connected component using graph-tool.
     """
-    np.random.seed(seed)  # Seed for numpy random choices
-
-    # Create a graph with n vertices
+    random.seed(seed)
     G = gt.Graph(directed=False)
     G.add_vertex(n)
 
-    # Keep adding edges until we have m edges
-    while G.num_edges() < m:
-        # Randomly choose two distinct vertices
-        u, v = np.random.choice(n, 2, replace=False)
-        if not G.edge(u, v):  # Add an edge if it doesn't already exist
-            G.add_edge(u, v)
-
-        # Check if the graph is connected
-        _, comp_hist = gt.label_components(G)
-        if len(comp_hist) == 1 and G.num_edges() == m:
-            return [(e.source(), e.target()) for e in G.edges()]
-    print("Failed to generate a graph with the specified parameters.")
+    try:
+        for _ in range(5000):
+            gt.add_random_edges(G, m)
+            _, component_labels = gt.label_components(G)
+            if len(set(component_labels)) == 1:
+                return G
+    except Exception as e:
+        print(f"Failed to generate a connected graph: {e}")
     return None
 
 
@@ -66,12 +61,10 @@ def timesteps_for_linear_ancilla_bus_graph_tool(g, layout):
 
 
 def generate_updown(n):
-    """Generate the updown strategy for a given n."""
     return list(range(1, n)) + list(range(n - 2, 0, -1))
 
 
 def generate_reverse(n):
-    """Generate the reverse strategy for a given n."""
     return list(range(n - 1, 0, -1))
 
 
@@ -136,11 +129,12 @@ for num_edges in range(150, 200, 5):
     # Iterate for 10 instances
     for _ in range(4):
         # Generate a graph with the given number of edges
-        edges = gen_erdos_renyi_graph_single_component_gt(num_vertices, num_edges, seed=51 + _)
+        G = gen_erdos_renyi_graph_single_component_gt(num_vertices, num_edges, seed=51 + _)
+        edges = [(e.source(), e.target()) for e in G.edges()]
         if edges is None:
             print(f"Failed to generate graph for num_vertices={num_vertices}, num_edges={num_edges}")
             continue  # Skip this iteration if edges is None
-        g = gt.Graph(directed=True)
+        g = gt.Graph(directed=False)
         g.add_edge_list(edges)
         original_layout = list(range(num_vertices))
 
