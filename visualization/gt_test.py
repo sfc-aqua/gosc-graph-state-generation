@@ -139,10 +139,10 @@ strategies = ["original", "updown", "reverse"]
 
 results = {strategy: {"num_edges": [], "timesteps": []} for strategy in strategies}
 
-num_vertices = 50
+num_vertices = 100
 
 # Iterate over increasing number of edges
-for num_edges in range(150, 200, 5):
+for num_edges in range(250, 800, 10):
     # Iterate for _ instances
     for _ in range(4):
         # Generate a graph with the given number of edges

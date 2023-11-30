@@ -1,4 +1,3 @@
-from graph_tool.all import *
 import graph_tool.all as gt
 import matplotlib.pyplot as plt
 import numpy as np
